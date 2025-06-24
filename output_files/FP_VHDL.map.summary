@@ -1,12 +1,12 @@
-Analysis & Synthesis Status : Successful - Tue Jun 24 16:50:30 2025
+Analysis & Synthesis Status : Successful - Tue Jun 24 18:47:13 2025
 Quartus Prime Version : 20.1.0 Build 711 06/05/2020 SJ Lite Edition
 Revision Name : FP_VHDL
 Top-level Entity Name : FP_VHDL
 Family : MAX 10
-Total logic elements : 270
-    Total combinational functions : 224
-    Dedicated logic registers : 191
-Total registers : 191
+Total logic elements : 4,331
+    Total combinational functions : 3,674
+    Dedicated logic registers : 814
+Total registers : 814
 Total pins : 41
 Total virtual pins : 0
 Total memory bits : 768

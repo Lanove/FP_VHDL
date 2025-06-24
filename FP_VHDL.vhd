@@ -1,9 +1,234 @@
 -- File: FP_VHDL.vhd
--- Modified to remove the explicit wait states after UART transmission.
+-- Modified to include and use a parallel FIR filter. The filtered output
+-- is now sent as the second data channel in the UART packet.
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
+USE ieee.std_logic_signed.ALL; -- For SIGNED type used in filter
+
+----------------------------------------------------------------
+-- FIR Filter Module
+----------------------------------------------------------------
+ENTITY fir_filter IS
+  PORT (
+    clk : IN STD_LOGIC;
+    reset_n : IN STD_LOGIC;
+    sample_enable : IN STD_LOGIC;
+    data_in : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
+    data_out : OUT STD_LOGIC_VECTOR(11 DOWNTO 0)
+  );
+END ENTITY fir_filter;
+
+ARCHITECTURE rtl OF fir_filter IS
+  -- Define a 31-tap filter
+  CONSTANT TAPS_COUNT : INTEGER := 51;
+
+  -- Coefficients for a 31-tap filter
+  -- Using 16-bit Q15 format (1 sign, 15 fractional bits).
+  TYPE coeff_array_t IS ARRAY (0 TO TAPS_COUNT - 1) OF STD_LOGIC_VECTOR(15 DOWNTO 0);
+  CONSTANT coeffs : coeff_array_t := (
+    0 => x"000D", -- 13
+    1 => x"0016", -- 22
+    2 => x"0021", -- 33
+    3 => x"0030", -- 48
+    4 => x"0042", -- 66
+    5 => x"0058", -- 88
+    6 => x"006D", -- 109
+    7 => x"007F", -- 127
+    8 => x"0088", -- 136
+    9 => x"0082", -- 130
+    10 => x"0067", -- 103
+    11 => x"0032", -- 50
+    12 => x"FFDC", -- -36
+    13 => x"FF64", -- -156
+    14 => x"FEC6", -- -314
+    15 => x"FE06", -- -506
+    16 => x"FD26", -- -730
+    17 => x"FC2F", -- -977
+    18 => x"FB2A", -- -1238
+    19 => x"FA22", -- -1502
+    20 => x"F924", -- -1756
+    21 => x"F83E", -- -1986
+    22 => x"F77B", -- -2181
+    23 => x"F6E8", -- -2328
+    24 => x"F68C", -- -2420
+    25 => x"7675", -- 30325
+    26 => x"F68C", -- -2420
+    27 => x"F6E8", -- -2328
+    28 => x"F77B", -- -2181
+    29 => x"F83E", -- -1986
+    30 => x"F924", -- -1756
+    31 => x"FA22", -- -1502
+    32 => x"FB2A", -- -1238
+    33 => x"FC2F", -- -977
+    34 => x"FD26", -- -730
+    35 => x"FE06", -- -506
+    36 => x"FEC6", -- -314
+    37 => x"FF64", -- -156
+    38 => x"FFDC", -- -36
+    39 => x"0032", -- 50
+    40 => x"0067", -- 103
+    41 => x"0082", -- 130
+    42 => x"0088", -- 136
+    43 => x"007F", -- 127
+    44 => x"006D", -- 109
+    45 => x"0058", -- 88
+    46 => x"0042", -- 66
+    47 => x"0030", -- 48
+    48 => x"0021", -- 33
+    49 => x"0016", -- 22
+    50 => x"000D" -- 13
+  );
+
+  -- Internal signals
+  -- Shift register for input samples (the taps)
+  TYPE tap_array_t IS ARRAY (0 TO TAPS_COUNT - 1) OF SIGNED(11 DOWNTO 0);
+  SIGNAL taps : tap_array_t := (OTHERS => (OTHERS => '0'));
+
+  SIGNAL sum : STD_LOGIC_VECTOR(27 DOWNTO 0) := (OTHERS => '0');
+
+BEGIN
+  -- 1. Input Shift Register (Taps)
+  -- On each new sample, shift in the new data
+  shift_reg_proc : PROCESS (clk, reset_n)
+  BEGIN
+    IF reset_n = '0' THEN
+      taps <= (OTHERS => (OTHERS => '0'));
+    ELSIF rising_edge(clk) THEN
+      IF sample_enable = '1' THEN
+        taps(50) <= taps(49);
+        taps(49) <= taps(48);
+        taps(48) <= taps(47);
+        taps(47) <= taps(46);
+        taps(46) <= taps(45);
+        taps(45) <= taps(44);
+        taps(44) <= taps(43);
+        taps(43) <= taps(42);
+        taps(42) <= taps(41);
+        taps(41) <= taps(40);
+        taps(40) <= taps(39);
+        taps(39) <= taps(38);
+        taps(38) <= taps(37);
+        taps(37) <= taps(36);
+        taps(36) <= taps(35);
+        taps(35) <= taps(34);
+        taps(34) <= taps(33);
+        taps(33) <= taps(32);
+        taps(32) <= taps(31);
+        taps(31) <= taps(30);
+        taps(30) <= taps(29);
+        taps(29) <= taps(28);
+        taps(28) <= taps(27);
+        taps(27) <= taps(26);
+        taps(26) <= taps(25);
+        taps(25) <= taps(24);
+        taps(24) <= taps(23);
+        taps(23) <= taps(22);
+        taps(22) <= taps(21);
+        taps(21) <= taps(20);
+        taps(20) <= taps(19);
+        taps(19) <= taps(18);
+        taps(18) <= taps(17);
+        taps(17) <= taps(16);
+        taps(16) <= taps(15);
+        taps(15) <= taps(14);
+        taps(14) <= taps(13);
+        taps(13) <= taps(12);
+        taps(12) <= taps(11);
+        taps(11) <= taps(10);
+        taps(10) <= taps(9);
+        taps(9) <= taps(8);
+        taps(8) <= taps(7);
+        taps(7) <= taps(6);
+        taps(6) <= taps(5);
+        taps(5) <= taps(4);
+        taps(4) <= taps(3);
+        taps(3) <= taps(2);
+        taps(2) <= taps(1);
+        taps(1) <= taps(0);
+        taps(0) <= SIGNED(data_in) + 2048; -- New sample at the start
+      END IF;
+    END IF;
+  END PROCESS shift_reg_proc;
+  -- 3. Parallel Adder Tree (Combinational)
+  -- This is a long but purely parallel addition.
+  -- For synthesis, the tool will create an efficient adder tree structure.
+
+  -- 3. Parallel Adder Tree (Combinational)
+  -- This is a long but purely parallel addition.
+  -- For synthesis, the tool will create an efficient adder tree structure.
+  sum <= STD_LOGIC_VECTOR(
+    signed(taps(0)) * signed(coeffs(0)) +
+    signed(taps(1)) * signed(coeffs(1)) +
+    signed(taps(2)) * signed(coeffs(2)) +
+    signed(taps(3)) * signed(coeffs(3)) +
+    signed(taps(4)) * signed(coeffs(4)) +
+    signed(taps(5)) * signed(coeffs(5)) +
+    signed(taps(6)) * signed(coeffs(6)) +
+    signed(taps(7)) * signed(coeffs(7)) +
+    signed(taps(8)) * signed(coeffs(8)) +
+    signed(taps(9)) * signed(coeffs(9)) +
+    signed(taps(10)) * signed(coeffs(10)) +
+    signed(taps(11)) * signed(coeffs(11)) +
+    signed(taps(12)) * signed(coeffs(12)) +
+    signed(taps(13)) * signed(coeffs(13)) +
+    signed(taps(14)) * signed(coeffs(14)) +
+    signed(taps(15)) * signed(coeffs(15)) +
+    signed(taps(16)) * signed(coeffs(16)) +
+    signed(taps(17)) * signed(coeffs(17)) +
+    signed(taps(18)) * signed(coeffs(18)) +
+    signed(taps(19)) * signed(coeffs(19)) +
+    signed(taps(20)) * signed(coeffs(20)) +
+    signed(taps(21)) * signed(coeffs(21)) +
+    signed(taps(22)) * signed(coeffs(22)) +
+    signed(taps(23)) * signed(coeffs(23)) +
+    signed(taps(24)) * signed(coeffs(24)) +
+    signed(taps(25)) * signed(coeffs(25)) +
+    signed(taps(26)) * signed(coeffs(26)) +
+    signed(taps(27)) * signed(coeffs(27)) +
+    signed(taps(28)) * signed(coeffs(28)) +
+    signed(taps(29)) * signed(coeffs(29)) +
+    signed(taps(30)) * signed(coeffs(30)) +
+    signed(taps(31)) * signed(coeffs(31)) +
+    signed(taps(32)) * signed(coeffs(32)) +
+    signed(taps(33)) * signed(coeffs(33)) +
+    signed(taps(34)) * signed(coeffs(34)) +
+    signed(taps(35)) * signed(coeffs(35)) +
+    signed(taps(36)) * signed(coeffs(36)) +
+    signed(taps(37)) * signed(coeffs(37)) +
+    signed(taps(38)) * signed(coeffs(38)) +
+    signed(taps(39)) * signed(coeffs(39)) +
+    signed(taps(40)) * signed(coeffs(40)) +
+    signed(taps(41)) * signed(coeffs(41)) +
+    signed(taps(42)) * signed(coeffs(42)) +
+    signed(taps(43)) * signed(coeffs(43)) +
+    signed(taps(44)) * signed(coeffs(44)) +
+    signed(taps(45)) * signed(coeffs(45)) +
+    signed(taps(46)) * signed(coeffs(46)) +
+    signed(taps(47)) * signed(coeffs(47)) +
+    signed(taps(48)) * signed(coeffs(48)) +
+    signed(taps(49)) * signed(coeffs(49)) +
+    signed(taps(50)) * signed(coeffs(50))
+    );
+  -- 4. Output Scaling and Assignment (Combinational)
+  -- The sum is in Q15 format. We need to shift right by 15 to get the integer result,
+  -- and select the correct 12 bits. The integer portion starts at bit 15.
+  -- We take a 12-bit slice, allowing for bit growth.
+  -- data_out <= resize(sum(27 DOWNTO 16), 12);
+  data_out <= STD_LOGIC_VECTOR((sum(27 DOWNTO 16)) + 2048);
+  -- data_out <= taps(30);
+
+END ARCHITECTURE rtl;
+
+----------------------------------------------------------------
+-- Top Level Module
+----------------------------------------------------------------
+
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
+USE ieee.std_logic_signed.ALL; -- For SIGNED type used in filter
 
 ENTITY FP_VHDL IS
   PORT (
@@ -53,7 +278,7 @@ ARCHITECTURE rtl OF FP_VHDL IS
 
   -- Constants for the UART and Sampling
   CONSTANT CLKS_PER_BIT : INTEGER := 17; -- For ~3 Mbaud with 50MHz clock
-  CONSTANT SAMPLE_RATE_DIV : INTEGER := 2000; -- 50MHz / 1000 = 50kHz sample rate
+  CONSTANT SAMPLE_RATE_DIV : INTEGER := 2000; -- 50MHz / 2000 = 25kHz sample rate
 
   -- ADC Signals
   SIGNAL ch0, ch1, ch2, ch3, ch4, ch5, ch6, ch7 : STD_LOGIC_VECTOR(11 DOWNTO 0);
@@ -68,6 +293,9 @@ ARCHITECTURE rtl OF FP_VHDL IS
   -- Signals for Decimated Sampling
   SIGNAL sample_counter : INTEGER RANGE 0 TO SAMPLE_RATE_DIV - 1;
   SIGNAL new_sample_ready : STD_LOGIC;
+
+  -- Signal to hold the FIR filter's output
+  SIGNAL filtered_data_out : STD_LOGIC_VECTOR(11 DOWNTO 0);
 
   -- FSM Signals and Types
   TYPE t_fsm_state IS (
@@ -114,8 +342,18 @@ BEGIN
       o_TX_Done => uart_tx_done
     );
 
+    -- Instantiate the FIR Filter
+    fir_inst : ENTITY work.fir_filter
+      PORT MAP(
+        clk => clk,
+        reset_n => reset_n,
+        sample_enable => new_sample_ready,
+        data_in => ch0,
+        data_out => filtered_data_out
+      );
+
     ----------------------------------------------------------------
-    -- Process to generate a 50kHz sampling trigger
+    -- Process to generate a 25kHz sampling trigger
     ----------------------------------------------------------------
     sample_trigger_proc : PROCESS (clk, reset_n)
     BEGIN
@@ -132,6 +370,7 @@ BEGIN
         END IF;
       END IF;
     END PROCESS sample_trigger_proc;
+
     ----------------------------------------------------------------
     -- Integrated FSM Process
     -- Synchronized to the new_sample_ready trigger
@@ -155,10 +394,10 @@ BEGIN
             WHEN IDLE =>
               -- Wait for a new sample AND for the UART to be free
               IF new_sample_ready = '1' AND uart_tx_active = '0' THEN
-                -- Latch the current ADC data
+                -- Latch the raw and filtered ADC data
                 adc_data0_reg <= ch0;
-                adc_data1_reg <= x"234";
-                -- Prepare to send the start byte 'S'
+                adc_data1_reg <= filtered_data_out;
+                -- Prepare to send the start byte
                 uart_tx_data <= x"AE";
                 uart_tx_dv <= '1';
                 state <= SEND_HEADER;

@@ -42,7 +42,7 @@ def design_fir_filter():
     fixed_point_coeffs = np.clip(fixed_point_coeffs, -2**31, 2**31-1).astype(np.int32)
     
     print(f"\nFixed-Point Coefficients (32-bit, first 10):")
-    for i in range(min(10, len(fixed_point_coeffs))):
+    for i in range(len(fixed_point_coeffs)):
         # Convert to unsigned 32-bit representation for hex display
         coeff_val = int(fixed_point_coeffs[i])  # Convert numpy int32 to Python int
         if coeff_val < 0:

@@ -8,7 +8,9 @@ import queue
 
 # --- Configuration ---
 # IMPORTANT: Set these values to match your hardware setup.
-SERIAL_PORT = "/dev/ttyUSB0"  # Change this! e.g., 'COM3' on Windows, '/dev/ttyUSB0' on Linux
+SERIAL_PORT = (
+    "/dev/ttyUSB0"  # Change this! e.g., 'COM3' on Windows, '/dev/ttyUSB0' on Linux
+)
 BAUD_RATE = 3000000  # Change this to match the baud rate set in your VHDL
 
 # Plotting settings
@@ -79,7 +81,6 @@ def serial_reader_thread(ser, data_queue, stop_event):
 
 
 def main():
-    """Main function to set up threads and plotting."""
     ser = setup_serial(SERIAL_PORT, BAUD_RATE)
     if not ser:
         return
@@ -88,30 +89,39 @@ def main():
     ch0_data = deque(maxlen=MAX_SAMPLES_TO_PLOT)
     ch1_data = deque(maxlen=MAX_SAMPLES_TO_PLOT)
 
-    # --- Setup Plotting ---
-    fig, ax = plt.subplots(figsize=(12, 7))
-    (line1,) = ax.plot(
-        [], [], marker="o", markersize=0, linestyle="-", label="ADC Channel 0 (ch0)"
+    # --- Create One Figure with Two Subplots ---
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+    
+    # Channel 0 subplot
+    (line1,) = ax1.plot(
+        [], [], marker="o", markersize=0, linestyle="-", label="ADC Channel 0"
     )
-    (line2,) = ax.plot(
-        [],
-        [],
-        marker="x",
-        markersize=0,
-        linestyle="--",
-        label='ADC Channel 1 (constant x"234")',
-    )
-    ax.set_title("Live ADC Data Received via UART", fontsize=16)
-    ax.set_xlabel("Sample Number (most recent)", fontsize=12)
-    ax.set_ylabel("ADC Value (12-bit)", fontsize=12)
-    ax.legend()
-    ax.grid(True)
-    ax.set_ylim(0, 4096)
-    ax.set_xlim(0, MAX_SAMPLES_TO_PLOT)
+    ax1.set_title("Live ADC Data - Channel 0", fontsize=14)
+    ax1.set_xlabel("Sample Number (most recent)", fontsize=11)
+    ax1.set_ylabel("ADC Value (12-bit)", fontsize=11)
+    ax1.legend()
+    ax1.grid(True)
+    ax1.set_ylim(0, 4096)
+    ax1.set_xlim(0, MAX_SAMPLES_TO_PLOT)
 
-    def update_plot(frame):
-        """This function is called periodically by the animation."""
-        # Get all data from the queue
+    # Channel 1 subplot
+    (line2,) = ax2.plot(
+        [], [], marker="x", markersize=0, linestyle="-", color="r", label='ADC Channel 1 (x"234")'
+    )
+    ax2.set_title("Live ADC Data - Channel 1", fontsize=14)
+    ax2.set_xlabel("Sample Number (most recent)", fontsize=11)
+    ax2.set_ylabel("ADC Value (12-bit)", fontsize=11)
+    ax2.legend()
+    ax2.grid(True)
+    ax2.set_ylim(0, 4096)
+    ax2.set_xlim(0, MAX_SAMPLES_TO_PLOT)
+
+    # Adjust layout to prevent overlap
+    plt.tight_layout()
+
+    # --- Define single update function for both subplots ---
+    def update_plots(frame):
+        # Pull any new data from the queue
         while not data_queue.empty():
             try:
                 adc0, adc1 = data_queue.get_nowait()
@@ -119,11 +129,11 @@ def main():
                 ch1_data.append(adc1)
             except queue.Empty:
                 break
-
-        # Update plot data
+        
+        # Update both lines
         line1.set_data(np.arange(len(ch0_data)), ch0_data)
         line2.set_data(np.arange(len(ch1_data)), ch1_data)
-        return line1, line2
+        return (line1, line2)
 
     # --- Start Reader Thread ---
     stop_event = threading.Event()
@@ -135,9 +145,9 @@ def main():
 
     print("Starting data acquisition... Close the plot window to stop.")
 
-    # --- Start Animation ---
+    # --- Create single animation for both subplots ---
     ani = animation.FuncAnimation(
-        fig, update_plot, blit=True, interval=PLOT_UPDATE_INTERVAL_MS
+        fig, update_plots, blit=True, interval=PLOT_UPDATE_INTERVAL_MS
     )
 
     try:
@@ -145,7 +155,6 @@ def main():
     except Exception as e:
         print(f"An error occurred during plotting: {e}")
     finally:
-        # Cleanly stop the thread and close the port
         print("Stopping reader thread...")
         stop_event.set()
         reader_thread.join(timeout=2)
