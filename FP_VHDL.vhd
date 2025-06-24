@@ -147,7 +147,7 @@ BEGIN
         taps(3) <= taps(2);
         taps(2) <= taps(1);
         taps(1) <= taps(0);
-        taps(0) <= SIGNED(data_in) + 2048; -- New sample at the start
+        taps(0) <= (SIGNED(data_in) + 2048); -- New sample at the start
       END IF;
     END IF;
   END PROCESS shift_reg_proc;

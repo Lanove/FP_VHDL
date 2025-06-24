@@ -68,7 +68,13 @@ def serial_reader_thread(ser, data_queue, stop_event):
                         if len(data_buffer) == 4:
                             d0_h, d0_l, d1_h, d1_l = data_buffer
                             adc_val_0 = (d0_h << 4) | (d0_l >> 4)
-                            adc_val_1 = (d1_h << 4) | (d1_l >> 4)
+                            adc_val_1_raw = (d1_h << 4) | (d1_l >> 4)
+                            
+                            # Remove DC offset (2048), multiply by 2, then add DC offset back
+                            adc_val_1 = ((adc_val_1_raw - 2048) * 2) + 2048
+                            
+                            # Clamp to valid 12-bit range (0-4095)
+                            adc_val_1 = max(0, min(4095, adc_val_1))
 
                             # Put the complete data packet into the queue
                             data_queue.put((adc_val_0, adc_val_1))
@@ -90,7 +96,7 @@ def main():
     ch1_data = deque(maxlen=MAX_SAMPLES_TO_PLOT)
 
     # --- Create One Figure with Two Subplots ---
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
     
     # Channel 0 subplot
     (line1,) = ax1.plot(
@@ -104,17 +110,27 @@ def main():
     ax1.set_ylim(0, 4096)
     ax1.set_xlim(0, MAX_SAMPLES_TO_PLOT)
 
+    # Add text boxes for Channel 0 statistics
+    ch0_stats_text = ax1.text(0.02, 0.98, "", transform=ax1.transAxes, 
+                             verticalalignment='top', bbox=dict(boxstyle='round', 
+                             facecolor='wheat', alpha=0.8), fontsize=10)
+
     # Channel 1 subplot
     (line2,) = ax2.plot(
-        [], [], marker="x", markersize=0, linestyle="-", color="r", label='ADC Channel 1 (x"234")'
+        [], [], marker="x", markersize=0, linestyle="-", color="r", label='ADC Channel 1 (Filtered)'
     )
-    ax2.set_title("Live ADC Data - Channel 1", fontsize=14)
+    ax2.set_title("Live ADC Data - Channel 1 (Filtered)", fontsize=14)
     ax2.set_xlabel("Sample Number (most recent)", fontsize=11)
     ax2.set_ylabel("ADC Value (12-bit)", fontsize=11)
     ax2.legend()
     ax2.grid(True)
     ax2.set_ylim(0, 4096)
     ax2.set_xlim(0, MAX_SAMPLES_TO_PLOT)
+
+    # Add text boxes for Channel 1 statistics
+    ch1_stats_text = ax2.text(0.02, 0.98, "", transform=ax2.transAxes, 
+                             verticalalignment='top', bbox=dict(boxstyle='round', 
+                             facecolor='lightblue', alpha=0.8), fontsize=10)
 
     # Adjust layout to prevent overlap
     plt.tight_layout()
@@ -133,7 +149,32 @@ def main():
         # Update both lines
         line1.set_data(np.arange(len(ch0_data)), ch0_data)
         line2.set_data(np.arange(len(ch1_data)), ch1_data)
-        return (line1, line2)
+        
+        # Calculate and display statistics for Channel 0
+        if len(ch0_data) > 0:
+            ch0_array = np.array(ch0_data)
+            ch0_min = np.min(ch0_array)
+            ch0_max = np.max(ch0_array)
+            ch0_pp = ch0_max - ch0_min
+            ch0_mean = np.mean(ch0_array)
+            ch0_std = np.std(ch0_array)
+            
+            ch0_stats = f"P-P: {ch0_pp}"
+            ch0_stats_text.set_text(ch0_stats)
+        
+        # Calculate and display statistics for Channel 1
+        if len(ch1_data) > 0:
+            ch1_array = np.array(ch1_data)
+            ch1_min = np.min(ch1_array)
+            ch1_max = np.max(ch1_array)
+            ch1_pp = ch1_max - ch1_min
+            ch1_mean = np.mean(ch1_array)
+            ch1_std = np.std(ch1_array)
+            
+            ch1_stats = f"P-P: {ch1_pp}"
+            ch1_stats_text.set_text(ch1_stats)
+        
+        return (line1, line2, ch0_stats_text, ch1_stats_text)
 
     # --- Start Reader Thread ---
     stop_event = threading.Event()
@@ -144,6 +185,7 @@ def main():
     reader_thread.start()
 
     print("Starting data acquisition... Close the plot window to stop.")
+    print("Statistics will be displayed on the plots showing Min, Max, Peak-to-Peak, Mean, and Standard Deviation.")
 
     # --- Create single animation for both subplots ---
     ani = animation.FuncAnimation(
