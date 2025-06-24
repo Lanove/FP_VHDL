@@ -1,20 +1,21 @@
 
-State Machine - |FP_VHDL|tx_state
-Name tx_state.TX_FILT_L tx_state.TX_FILT_H tx_state.TX_RAW_L tx_state.TX_RAW_H tx_state.TX_HEADER2 tx_state.TX_HEADER1 tx_state.TX_IDLE 
-tx_state.TX_IDLE 0 0 0 0 0 0 0 
-tx_state.TX_HEADER1 0 0 0 0 0 1 1 
-tx_state.TX_HEADER2 0 0 0 0 1 0 1 
-tx_state.TX_RAW_H 0 0 0 1 0 0 1 
-tx_state.TX_RAW_L 0 0 1 0 0 0 1 
-tx_state.TX_FILT_H 0 1 0 0 0 0 1 
-tx_state.TX_FILT_L 1 0 0 0 0 0 1 
+State Machine - |FP_VHDL|state
+Name state.SEND_EOL state.SEND_D1_LOW state.SEND_D1_HIGH state.SEND_D0_LOW state.SEND_D0_HIGH state.SEND_HEADER state.IDLE 
+state.IDLE 0 0 0 0 0 0 0 
+state.SEND_HEADER 0 0 0 0 0 1 1 
+state.SEND_D0_HIGH 0 0 0 0 1 0 1 
+state.SEND_D0_LOW 0 0 0 1 0 0 1 
+state.SEND_D1_HIGH 0 0 1 0 0 0 1 
+state.SEND_D1_LOW 0 1 0 0 0 0 1 
+state.SEND_EOL 1 0 0 0 0 0 1 
 
-State Machine - |FP_VHDL|uart_tx:uart_tx_inst|fsm_state
-Name fsm_state.FSM_STOP fsm_state.FSM_SEND fsm_state.FSM_START fsm_state.FSM_IDLE 
-fsm_state.FSM_IDLE 0 0 0 0 
-fsm_state.FSM_START 0 0 1 1 
-fsm_state.FSM_SEND 0 1 0 1 
-fsm_state.FSM_STOP 1 0 0 1 
+State Machine - |FP_VHDL|UART_TX:uart_tx_inst|r_SM_Main
+Name r_SM_Main.s_Cleanup r_SM_Main.s_TX_Stop_Bit r_SM_Main.s_TX_Data_Bits r_SM_Main.s_TX_Start_Bit r_SM_Main.s_Idle 
+r_SM_Main.s_Idle 0 0 0 0 0 
+r_SM_Main.s_TX_Start_Bit 0 0 0 1 1 
+r_SM_Main.s_TX_Data_Bits 0 0 1 0 1 
+r_SM_Main.s_TX_Stop_Bit 0 1 0 0 1 
+r_SM_Main.s_Cleanup 1 0 0 0 1 
 
 State Machine - |FP_VHDL|adc_ip:adc_inst|adc_ip_adc_mega_0:adc_mega_0|altera_up_avalon_adv_adc:ADC_CTRL|currState
 Name currState.doneConversionState currState.readConversionState currState.pendingConversionState currState.turnOnSequencerState currState.idleState currState.resetState 

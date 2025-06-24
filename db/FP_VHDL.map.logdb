@@ -1,3 +1,1 @@
 v1
-DSP_BALANCING_IMPLEMENTATION,DSP_BLOCKS,fir_filter:fir_inst|lpm_mult:Mult15|mult_aks:auto_generated|mac_out2,
-DSP_BALANCING_IMPLEMENTATION,DSP_BLOCKS,fir_filter:fir_inst|lpm_mult:Mult15|mult_aks:auto_generated|mac_out4,

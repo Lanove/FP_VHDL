@@ -1,0 +1,55 @@
+// FIR Filter Coefficients (32-bit)
+// Sampling Rate: 50000 Hz
+// Cutoff Frequency: 1100 Hz
+// Filter Order: 31
+// Number of Taps: 31
+// Scale Factor: 2^31 - 1 = 2147483647
+
+parameter taps = 31;
+parameter input_size = 12;
+parameter output_size = 49;
+// FIR coefficients (51 taps) - 32-bit coefficients
+parameter signed [31:0] h0  = 32'hFFDFFDFF, h1  = 32'hFF9D574F, h2  = 32'hFF580C83, h3  = 32'hFF113BF3;
+parameter signed [31:0] h4  = 32'hFECA1377, h5  = 32'hFE83CA1F, h6  = 32'hFE3F99A2, h7  = 32'hFDFEB7A4;
+parameter signed [31:0] h8  = 32'hFDC24F0C, h9  = 32'hFD8B7976, h10 = 32'hFD5B390D, h11 = 32'hFD3272D1;
+parameter signed [31:0] h12 = 32'hFD11E989, h13 = 32'hFCFA3964, h14 = 32'hFCEBD486, h15 = 32'h7CE78620;
+parameter signed [31:0] h16 = 32'hFCEBD486, h17 = 32'hFCFA3964, h18 = 32'hFD11E989, h19 = 32'hFD3272D1;
+parameter signed [31:0] h20 = 32'hFD5B390D, h21 = 32'hFD8B7976, h22 = 32'hFDC24F0C, h23 = 32'hFDFEB7A4;
+parameter signed [31:0] h24 = 32'hFE3F99A2, h25 = 32'hFE83CA1F, h26 = 32'hFECA1377, h27 = 32'hFF113BF3;
+parameter signed [31:0] h28 = 32'hFF580C83, h29 = 32'hFF9D574F, h30 = 32'hFFDFFDFF;
+
+reg [input_size-1:0] FIR [1:taps-1];
+wire signed [11:0] data_in_signed = data_in - 12'd2048;
+// Combinational MAC operation
+wire signed [output_size-1:0] mac_result;
+assign mac_result = h0  * data_in_signed +
+                        h1  * FIR[1] +
+                        h2  * FIR[2] +
+                        h3  * FIR[3] +
+                        h4  * FIR[4] +
+                        h5  * FIR[5] +
+                        h6  * FIR[6] +
+                        h7  * FIR[7] +
+                        h8  * FIR[8] +
+                        h9  * FIR[9] +
+                        h10 * FIR[10] +
+                        h11 * FIR[11] +
+                        h12 * FIR[12] +
+                        h13 * FIR[13] +
+                        h14 * FIR[14] +
+                        h15 * FIR[15] +
+                        h16 * FIR[16] +
+                        h17 * FIR[17] +
+                        h18 * FIR[18] +
+                        h19 * FIR[19] +
+                        h20 * FIR[20] +
+                        h21 * FIR[21] +
+                        h22 * FIR[22] +
+                        h23 * FIR[23] +
+                        h24 * FIR[24] +
+                        h25 * FIR[25] +
+                        h26 * FIR[26] +
+                        h27 * FIR[27] +
+                        h28 * FIR[28] +
+                        h29 * FIR[29] +
+                        h30 * FIR[30];

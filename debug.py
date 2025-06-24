@@ -2,7 +2,7 @@ import serial
 import time
 
 class SerialDebugger:
-    def __init__(self, port, baud_rate=921600):
+    def __init__(self, port, baud_rate=3000000):
         self.port = port
         self.baud_rate = baud_rate
         self.ser = None
@@ -186,9 +186,9 @@ class SerialDebugger:
 def main():
     # Configuration
     SERIAL_PORT = '/dev/ttyUSB0'  # Adjust for your system
-    BAUD_RATE = 3000000
+    # BAUD_RATE = 3000000
     
-    debugger = SerialDebugger(SERIAL_PORT, BAUD_RATE)
+    debugger = SerialDebugger(SERIAL_PORT)
     
     print("Serial Debug Tool")
     print("1. Raw byte debug (every byte with details)")

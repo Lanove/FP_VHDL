@@ -1,5 +1,5 @@
 Flow report for FP_VHDL
-Sun Jun 22 15:39:44 2025
+Tue Jun 24 16:50:55 2025
 Quartus Prime Version 20.1.0 Build 711 06/05/2020 SJ Lite Edition
 
 
@@ -41,21 +41,21 @@ https://fpgasoftware.intel.com/eula.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Sun Jun 22 15:39:44 2025       ;
+; Flow Status                        ; Successful - Tue Jun 24 16:50:55 2025       ;
 ; Quartus Prime Version              ; 20.1.0 Build 711 06/05/2020 SJ Lite Edition ;
 ; Revision Name                      ; FP_VHDL                                     ;
 ; Top-level Entity Name              ; FP_VHDL                                     ;
 ; Family                             ; MAX 10                                      ;
 ; Device                             ; 10M50DAF484C7G                              ;
 ; Timing Models                      ; Final                                       ;
-; Total logic elements               ; 5,327 / 49,760 ( 11 % )                     ;
-;     Total combinational functions  ; 5,201 / 49,760 ( 10 % )                     ;
-;     Dedicated logic registers      ; 582 / 49,760 ( 1 % )                        ;
-; Total registers                    ; 582                                         ;
+; Total logic elements               ; 346 / 49,760 ( < 1 % )                      ;
+;     Total combinational functions  ; 224 / 49,760 ( < 1 % )                      ;
+;     Dedicated logic registers      ; 191 / 49,760 ( < 1 % )                      ;
+; Total registers                    ; 191                                         ;
 ; Total pins                         ; 41 / 360 ( 11 % )                           ;
 ; Total virtual pins                 ; 0                                           ;
 ; Total memory bits                  ; 768 / 1,677,312 ( < 1 % )                   ;
-; Embedded Multiplier 9-bit elements ; 4 / 288 ( 1 % )                             ;
+; Embedded Multiplier 9-bit elements ; 0 / 288 ( 0 % )                             ;
 ; Total PLLs                         ; 1 / 4 ( 25 % )                              ;
 ; UFM blocks                         ; 0 / 1 ( 0 % )                               ;
 ; ADC blocks                         ; 1 / 2 ( 50 % )                              ;
@@ -67,7 +67,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 06/22/2025 15:37:52 ;
+; Start date & time ; 06/24/2025 16:50:14 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; FP_VHDL             ;
 +-------------------+---------------------+
@@ -78,7 +78,7 @@ https://fpgasoftware.intel.com/eula.
 +-------------------------------------+----------------------------------------------------------+---------------+-------------+-----------------------------------+
 ; Assignment Name                     ; Value                                                    ; Default Value ; Entity Name ; Section Id                        ;
 +-------------------------------------+----------------------------------------------------------+---------------+-------------+-----------------------------------+
-; COMPILER_SIGNATURE_ID               ; 30905330625461.175058147200473                           ; --            ; --          ; --                                ;
+; COMPILER_SIGNATURE_ID               ; 30905330625461.175075861418823                           ; --            ; --          ; --                                ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                                      ; --            ; --          ; eda_board_design_timing           ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                                      ; --            ; --          ; eda_board_design_boundary_scan    ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                                      ; --            ; --          ; eda_board_design_signal_integrity ;
@@ -108,12 +108,12 @@ https://fpgasoftware.intel.com/eula.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:00:26     ; 1.0                     ; 523 MB              ; 00:00:45                           ;
-; Fitter               ; 00:01:03     ; 1.3                     ; 1153 MB             ; 00:02:18                           ;
-; Assembler            ; 00:00:04     ; 1.0                     ; 372 MB              ; 00:00:04                           ;
-; Timing Analyzer      ; 00:00:11     ; 1.9                     ; 560 MB              ; 00:00:20                           ;
-; EDA Netlist Writer   ; 00:00:02     ; 1.0                     ; 634 MB              ; 00:00:02                           ;
-; Total                ; 00:01:46     ; --                      ; --                  ; 00:03:29                           ;
+; Analysis & Synthesis ; 00:00:15     ; 1.0                     ; 451 MB              ; 00:00:42                           ;
+; Fitter               ; 00:00:14     ; 1.1                     ; 1086 MB             ; 00:00:20                           ;
+; Assembler            ; 00:00:04     ; 1.0                     ; 355 MB              ; 00:00:04                           ;
+; Timing Analyzer      ; 00:00:04     ; 1.2                     ; 503 MB              ; 00:00:04                           ;
+; EDA Netlist Writer   ; 00:00:00     ; 1.0                     ; 612 MB              ; 00:00:01                           ;
+; Total                ; 00:00:37     ; --                      ; --                  ; 00:01:11                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
