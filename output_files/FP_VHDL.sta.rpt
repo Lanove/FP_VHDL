@@ -1,5 +1,5 @@
 Timing Analyzer report for FP_VHDL
-Tue Jun 24 19:15:33 2025
+Tue Jun 24 19:43:58 2025
 Quartus Prime Version 20.1.0 Build 711 06/05/2020 SJ Lite Edition
 
 
@@ -93,14 +93,14 @@ https://fpgasoftware.intel.com/eula.
 ; Number detected on machine ; 8           ;
 ; Maximum allowed            ; 4           ;
 ;                            ;             ;
-; Average used               ; 2.05        ;
+; Average used               ; 2.11        ;
 ; Maximum used               ; 4           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;  35.5%      ;
-;     Processor 3            ;  35.1%      ;
-;     Processor 4            ;  34.1%      ;
+;     Processor 2            ;  37.3%      ;
+;     Processor 3            ;  37.1%      ;
+;     Processor 4            ;  36.7%      ;
 +----------------------------+-------------+
 
 
@@ -109,7 +109,7 @@ https://fpgasoftware.intel.com/eula.
 +---------------+--------+--------------------------+
 ; SDC File Path ; Status ; Read at                  ;
 +---------------+--------+--------------------------+
-; timing.sdc    ; OK     ; Tue Jun 24 19:15:27 2025 ;
+; timing.sdc    ; OK     ; Tue Jun 24 19:43:53 2025 ;
 +---------------+--------+--------------------------+
 
 
@@ -137,7 +137,7 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +-----------+----------+---------------+
 ; Clock     ; Slack    ; End Point TNS ;
 +-----------+----------+---------------+
-; clk_50MHz ; -882.636 ; -10904.980    ;
+; clk_50MHz ; -882.203 ; -10781.162    ;
 +-----------+----------+---------------+
 
 
@@ -146,7 +146,7 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +-----------+-------+----------------+
 ; Clock     ; Slack ; End Point TNS  ;
 +-----------+-------+----------------+
-; clk_50MHz ; 0.341 ; 0.000          ;
+; clk_50MHz ; 0.565 ; 0.000          ;
 +-----------+-------+----------------+
 
 
@@ -180,7 +180,7 @@ Typical MTBF of Design is 1e+09 years or 3.15e+16 seconds.
 Number of Synchronizer Chains Found: 10
 Shortest Synchronizer Chain: 2 Registers
 Fraction of Chains for which MTBFs Could Not be Calculated: 0.800
-Worst Case Available Settling Time: 32.854 ns
+Worst Case Available Settling Time: 32.255 ns
 
 Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -204,7 +204,7 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +-----------+----------+---------------+
 ; Clock     ; Slack    ; End Point TNS ;
 +-----------+----------+---------------+
-; clk_50MHz ; -874.510 ; -10759.271    ;
+; clk_50MHz ; -874.112 ; -10645.511    ;
 +-----------+----------+---------------+
 
 
@@ -213,7 +213,7 @@ This panel reports FMAX for every clock in the design, regardless of the user-sp
 +-----------+-------+---------------+
 ; Clock     ; Slack ; End Point TNS ;
 +-----------+-------+---------------+
-; clk_50MHz ; 0.306 ; 0.000         ;
+; clk_50MHz ; 0.516 ; 0.000         ;
 +-----------+-------+---------------+
 
 
@@ -247,7 +247,7 @@ Typical MTBF of Design is 1e+09 years or 3.15e+16 seconds.
 Number of Synchronizer Chains Found: 10
 Shortest Synchronizer Chain: 2 Registers
 Fraction of Chains for which MTBFs Could Not be Calculated: 0.800
-Worst Case Available Settling Time: 33.381 ns
+Worst Case Available Settling Time: 32.839 ns
 
 Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -261,7 +261,7 @@ Typical MTBF values are calculated based on the nominal silicon characteristics,
 +-----------+----------+---------------+
 ; Clock     ; Slack    ; End Point TNS ;
 +-----------+----------+---------------+
-; clk_50MHz ; -834.304 ; -10009.933    ;
+; clk_50MHz ; -834.120 ; -10008.953    ;
 +-----------+----------+---------------+
 
 
@@ -270,7 +270,7 @@ Typical MTBF values are calculated based on the nominal silicon characteristics,
 +-----------+--------+---------------+
 ; Clock     ; Slack  ; End Point TNS ;
 +-----------+--------+---------------+
-; clk_50MHz ; -0.046 ; -0.136        ;
+; clk_50MHz ; -0.176 ; -0.721        ;
 +-----------+--------+---------------+
 
 
@@ -304,7 +304,7 @@ Typical MTBF of Design is 1e+09 years or 3.15e+16 seconds.
 Number of Synchronizer Chains Found: 10
 Shortest Synchronizer Chain: 2 Registers
 Fraction of Chains for which MTBFs Could Not be Calculated: 0.800
-Worst Case Available Settling Time: 36.863 ns
+Worst Case Available Settling Time: 36.711 ns
 
 Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -318,10 +318,10 @@ Typical MTBF values are calculated based on the nominal silicon characteristics,
 +------------------+------------+--------+----------+---------+---------------------+
 ; Clock            ; Setup      ; Hold   ; Recovery ; Removal ; Minimum Pulse Width ;
 +------------------+------------+--------+----------+---------+---------------------+
-; Worst-case Slack ; -882.636   ; -0.046 ; N/A      ; N/A     ; 4.424               ;
-;  clk_50MHz       ; -882.636   ; -0.046 ; N/A      ; N/A     ; 4.424               ;
-; Design-wide TNS  ; -10904.98  ; -0.136 ; 0.0      ; 0.0     ; 0.0                 ;
-;  clk_50MHz       ; -10904.980 ; -0.136 ; N/A      ; N/A     ; 0.000               ;
+; Worst-case Slack ; -882.203   ; -0.176 ; N/A      ; N/A     ; 4.424               ;
+;  clk_50MHz       ; -882.203   ; -0.176 ; N/A      ; N/A     ; 4.424               ;
+; Design-wide TNS  ; -10781.162 ; -0.721 ; 0.0      ; 0.0     ; 0.0                 ;
+;  clk_50MHz       ; -10781.162 ; -0.721 ; N/A      ; N/A     ; 0.000               ;
 +------------------+------------+--------+----------+---------+---------------------+
 
 
@@ -667,7 +667,7 @@ No non-DPA dedicated SERDES Receiver circuitry present in device or used in desi
 Info: *******************************************************************
 Info: Running Quartus Prime Timing Analyzer
     Info: Version 20.1.0 Build 711 06/05/2020 SJ Lite Edition
-    Info: Processing started: Tue Jun 24 19:15:25 2025
+    Info: Processing started: Tue Jun 24 19:43:51 2025
 Info: Command: quartus_sta FP_VHDL -c FP_VHDL
 Info: qsta_default_script.tcl version: #1
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
@@ -688,14 +688,14 @@ Info: Found TIMING_ANALYZER_REPORT_SCRIPT_INCLUDE_DEFAULT_ANALYSIS = ON
 Info: Analyzing Slow 1200mV 85C Model
 Info: Can't run Report Timing Closure Recommendations. The current device family is not supported.
 Critical Warning (332148): Timing requirements not met
-Info (332146): Worst-case setup slack is -882.636
+Info (332146): Worst-case setup slack is -882.203
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):  -882.636          -10904.980 clk_50MHz 
-Info (332146): Worst-case hold slack is 0.341
+    Info (332119):  -882.203          -10781.162 clk_50MHz 
+Info (332146): Worst-case hold slack is 0.565
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.341               0.000 clk_50MHz 
+    Info (332119):     0.565               0.000 clk_50MHz 
 Info (332140): No Recovery paths to report
 Info (332140): No Removal paths to report
 Info (332146): Worst-case minimum pulse width slack is 4.437
@@ -709,7 +709,7 @@ Info (332114): Report Metastability: Found 10 synchronizer chains.
     Info (332114): Number of Synchronizer Chains Found: 10
     Info (332114): Shortest Synchronizer Chain: 2 Registers
     Info (332114): Fraction of Chains for which MTBFs Could Not be Calculated: 0.800
-    Info (332114): Worst Case Available Settling Time: 32.854 ns
+    Info (332114): Worst Case Available Settling Time: 32.255 ns
     Info (332114): 
     Info (332114): Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
     Info (332114):   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -724,14 +724,14 @@ Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Tim
 Warning (332056): PLL cross checking found inconsistent PLL clock settings:
     Warning (332056): Node: adc_inst|adc_mega_0|ADC_CTRL|adc_pll|auto_generated|pll1|clk[0] was found missing 1 generated clock that corresponds to a base clock with a period of: 10.000
 Critical Warning (332148): Timing requirements not met
-Info (332146): Worst-case setup slack is -874.510
+Info (332146): Worst-case setup slack is -874.112
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):  -874.510          -10759.271 clk_50MHz 
-Info (332146): Worst-case hold slack is 0.306
+    Info (332119):  -874.112          -10645.511 clk_50MHz 
+Info (332146): Worst-case hold slack is 0.516
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):     0.306               0.000 clk_50MHz 
+    Info (332119):     0.516               0.000 clk_50MHz 
 Info (332140): No Recovery paths to report
 Info (332140): No Removal paths to report
 Info (332146): Worst-case minimum pulse width slack is 4.424
@@ -745,7 +745,7 @@ Info (332114): Report Metastability: Found 10 synchronizer chains.
     Info (332114): Number of Synchronizer Chains Found: 10
     Info (332114): Shortest Synchronizer Chain: 2 Registers
     Info (332114): Fraction of Chains for which MTBFs Could Not be Calculated: 0.800
-    Info (332114): Worst Case Available Settling Time: 33.381 ns
+    Info (332114): Worst Case Available Settling Time: 32.839 ns
     Info (332114): 
     Info (332114): Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
     Info (332114):   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -758,14 +758,14 @@ Info (332123): Deriving Clock Uncertainty. Please refer to report_sdc in the Tim
 Warning (332056): PLL cross checking found inconsistent PLL clock settings:
     Warning (332056): Node: adc_inst|adc_mega_0|ADC_CTRL|adc_pll|auto_generated|pll1|clk[0] was found missing 1 generated clock that corresponds to a base clock with a period of: 10.000
 Critical Warning (332148): Timing requirements not met
-Info (332146): Worst-case setup slack is -834.304
+Info (332146): Worst-case setup slack is -834.120
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):  -834.304          -10009.933 clk_50MHz 
-Info (332146): Worst-case hold slack is -0.046
+    Info (332119):  -834.120          -10008.953 clk_50MHz 
+Info (332146): Worst-case hold slack is -0.176
     Info (332119):     Slack       End Point TNS Clock 
     Info (332119): ========= =================== =====================
-    Info (332119):    -0.046              -0.136 clk_50MHz 
+    Info (332119):    -0.176              -0.721 clk_50MHz 
 Info (332140): No Recovery paths to report
 Info (332140): No Removal paths to report
 Info (332146): Worst-case minimum pulse width slack is 4.466
@@ -779,7 +779,7 @@ Info (332114): Report Metastability: Found 10 synchronizer chains.
     Info (332114): Number of Synchronizer Chains Found: 10
     Info (332114): Shortest Synchronizer Chain: 2 Registers
     Info (332114): Fraction of Chains for which MTBFs Could Not be Calculated: 0.800
-    Info (332114): Worst Case Available Settling Time: 36.863 ns
+    Info (332114): Worst Case Available Settling Time: 36.711 ns
     Info (332114): 
     Info (332114): Worst-Case MTBF values are calculated based on the worst-case silicon characteristics, with worst-case operating conditions.
     Info (332114):   - Under worst-case conditions, an increase of 100ps in available settling time will increase MTBF values by a factor of 1.8
@@ -788,9 +788,9 @@ Info (332114): Report Metastability: Found 10 synchronizer chains.
 Info (332102): Design is not fully constrained for setup requirements
 Info (332102): Design is not fully constrained for hold requirements
 Info: Quartus Prime Timing Analyzer was successful. 0 errors, 10 warnings
-    Info: Peak virtual memory: 542 megabytes
-    Info: Processing ended: Tue Jun 24 19:15:33 2025
-    Info: Elapsed time: 00:00:08
-    Info: Total CPU time (on all processors): 00:00:14
+    Info: Peak virtual memory: 548 megabytes
+    Info: Processing ended: Tue Jun 24 19:43:58 2025
+    Info: Elapsed time: 00:00:07
+    Info: Total CPU time (on all processors): 00:00:13
 
 

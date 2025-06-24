@@ -28,59 +28,58 @@ ARCHITECTURE rtl OF fir_filter IS
   -- Using 16-bit Q15 format (1 sign, 15 fractional bits).
   TYPE coeff_array_t IS ARRAY (0 TO TAPS_COUNT - 1) OF STD_LOGIC_VECTOR(15 DOWNTO 0);
   CONSTANT coeffs : coeff_array_t := (
-    0 => x"000D", -- 13
-    1 => x"0016", -- 22
-    2 => x"0021", -- 33
-    3 => x"0030", -- 48
-    4 => x"0042", -- 66
-    5 => x"0058", -- 88
-    6 => x"006D", -- 109
-    7 => x"007F", -- 127
-    8 => x"0088", -- 136
-    9 => x"0082", -- 130
-    10 => x"0067", -- 103
-    11 => x"0032", -- 50
-    12 => x"FFDC", -- -36
-    13 => x"FF64", -- -156
-    14 => x"FEC6", -- -314
-    15 => x"FE06", -- -506
-    16 => x"FD26", -- -730
-    17 => x"FC2F", -- -977
-    18 => x"FB2A", -- -1238
-    19 => x"FA22", -- -1502
-    20 => x"F924", -- -1756
-    21 => x"F83E", -- -1986
-    22 => x"F77B", -- -2181
-    23 => x"F6E8", -- -2328
-    24 => x"F68C", -- -2420
-    25 => x"7675", -- 30325
-    26 => x"F68C", -- -2420
-    27 => x"F6E8", -- -2328
-    28 => x"F77B", -- -2181
-    29 => x"F83E", -- -1986
-    30 => x"F924", -- -1756
-    31 => x"FA22", -- -1502
-    32 => x"FB2A", -- -1238
-    33 => x"FC2F", -- -977
-    34 => x"FD26", -- -730
-    35 => x"FE06", -- -506
-    36 => x"FEC6", -- -314
-    37 => x"FF64", -- -156
-    38 => x"FFDC", -- -36
-    39 => x"0032", -- 50
-    40 => x"0067", -- 103
-    41 => x"0082", -- 130
-    42 => x"0088", -- 136
-    43 => x"007F", -- 127
-    44 => x"006D", -- 109
-    45 => x"0058", -- 88
-    46 => x"0042", -- 66
-    47 => x"0030", -- 48
-    48 => x"0021", -- 33
-    49 => x"0016", -- 22
-    50 => x"000D" -- 13
+    0 => x"0013", -- 19
+    1 => x"001B", -- 27
+    2 => x"0026", -- 38
+    3 => x"0033", -- 51
+    4 => x"0044", -- 68
+    5 => x"0056", -- 86
+    6 => x"0067", -- 103
+    7 => x"0073", -- 115
+    8 => x"0076", -- 118
+    9 => x"0069", -- 105
+    10 => x"0047", -- 71
+    11 => x"000B", -- 11
+    12 => x"FFB1", -- -79
+    13 => x"FF36", -- -202
+    14 => x"FE99", -- -359
+    15 => x"FDDE", -- -546
+    16 => x"FD07", -- -761
+    17 => x"FC1C", -- -996
+    18 => x"FB26", -- -1242
+    19 => x"FA2F", -- -1489
+    20 => x"F943", -- -1725
+    21 => x"F86E", -- -1938
+    22 => x"F7BB", -- -2117
+    23 => x"F734", -- -2252
+    24 => x"F6DF", -- -2337
+    25 => x"76D1", -- 30417
+    26 => x"F6DF", -- -2337
+    27 => x"F734", -- -2252
+    28 => x"F7BB", -- -2117
+    29 => x"F86E", -- -1938
+    30 => x"F943", -- -1725
+    31 => x"FA2F", -- -1489
+    32 => x"FB26", -- -1242
+    33 => x"FC1C", -- -996
+    34 => x"FD07", -- -761
+    35 => x"FDDE", -- -546
+    36 => x"FE99", -- -359
+    37 => x"FF36", -- -202
+    38 => x"FFB1", -- -79
+    39 => x"000B", -- 11
+    40 => x"0047", -- 71
+    41 => x"0069", -- 105
+    42 => x"0076", -- 118
+    43 => x"0073", -- 115
+    44 => x"0067", -- 103
+    45 => x"0056", -- 86
+    46 => x"0044", -- 68
+    47 => x"0033", -- 51
+    48 => x"0026", -- 38
+    49 => x"001B", -- 27
+    50 => x"0013" -- 19
   );
-
   -- Internal signals
   -- Shift register for input samples (the taps)
   TYPE tap_array_t IS ARRAY (0 TO TAPS_COUNT - 1) OF SIGNED(11 DOWNTO 0);
@@ -147,7 +146,7 @@ BEGIN
         taps(3) <= taps(2);
         taps(2) <= taps(1);
         taps(1) <= taps(0);
-        taps(0) <= (SIGNED(data_in) + 2048); -- New sample at the start
+        taps(0) <= SIGNED(data_in) - 2048;
       END IF;
     END IF;
   END PROCESS shift_reg_proc;
@@ -216,7 +215,8 @@ BEGIN
   -- and select the correct 12 bits. The integer portion starts at bit 15.
   -- We take a 12-bit slice, allowing for bit growth.
   -- data_out <= resize(sum(27 DOWNTO 16), 12);
-  data_out <= STD_LOGIC_VECTOR((sum(27 DOWNTO 16)) + 2048);
+  -- Correctly scale by shifting right 15 bits, taking the 12 MSBs of the integer result
+  data_out <= STD_LOGIC_VECTOR(resize(signed(sum(26 DOWNTO 15)), 12) + 2048);
   -- data_out <= taps(30);
 
 END ARCHITECTURE rtl;

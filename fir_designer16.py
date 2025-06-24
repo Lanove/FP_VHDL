@@ -10,7 +10,7 @@ def design_fir_filter():
     
     # Normalized cutoff frequency (0 to 1, where 1 is Nyquist frequency)
     nyquist = fs / 2
-    normalized_cutoff = fc / nyquist * 0.85
+    normalized_cutoff = fc / nyquist * 0.82
     
     # Filter order (higher order = sharper cutoff, more taps)
     filter_order = 51  # Odd number for symmetric filter

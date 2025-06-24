@@ -70,14 +70,9 @@ def serial_reader_thread(ser, data_queue, stop_event):
                             adc_val_0 = (d0_h << 4) | (d0_l >> 4)
                             adc_val_1_raw = (d1_h << 4) | (d1_l >> 4)
                             
-                            # Remove DC offset (2048), multiply by 2, then add DC offset back
-                            adc_val_1 = ((adc_val_1_raw - 2048) * 2) + 2048
-                            
-                            # Clamp to valid 12-bit range (0-4095)
-                            adc_val_1 = max(0, min(4095, adc_val_1))
 
                             # Put the complete data packet into the queue
-                            data_queue.put((adc_val_0, adc_val_1))
+                            data_queue.put((adc_val_0, adc_val_1_raw))
 
                             current_state = STATE_WAIT_HEADER_1
         except Exception as e:
