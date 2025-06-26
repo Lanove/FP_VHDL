@@ -15,7 +15,6 @@ def design_fir_filter():
     # Filter order (higher order = sharper cutoff, more taps)
     filter_order = 51  # Odd number for symmetric filter
     
-    # Design FIR filter using window method (Cosine window, highpass)
     fir_coefficients = signal.firwin(filter_order, normalized_cutoff, window='hamming', pass_zero='highpass')
     
     # Print some general filter information

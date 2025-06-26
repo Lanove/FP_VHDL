@@ -17,7 +17,7 @@ USE ieee.numeric_std.ALL;
 
 ENTITY UART_TX IS
   GENERIC (
-    g_CLKS_PER_BIT : INTEGER := 17 -- Needs to be set correctly
+    g_CLKS_PER_BIT : INTEGER := 17 -- #3Mbaudps at 50MHz clock
   );
   PORT (
     i_Clk : IN STD_LOGIC;
